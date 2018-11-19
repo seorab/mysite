@@ -1,7 +1,7 @@
 {{ question }}
 <br>
 <hr>
-<form action="/polls/1/vote" method="post">
+<form action="/polls/{{ num }}/vote" method="post">
     <input type="submit"> <!-- submit 버튼 / 서버로 데이터를 전송 -->
 
     <!--
@@ -16,7 +16,7 @@
                            <!-- radio 그룹화 -->
             <input type="radio"
                    name="select"
-            value="{{ c.choice_text }}">
+            value="{{ c.id }}">
             {{ c.choice_text }}
         </li>
     {% endfor %}

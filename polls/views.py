@@ -3,12 +3,40 @@ from django.shortcuts import render
 from django.utils import timezone
 from polls.models import Question
 
+def save(request, question_id):
+    q = request.POST['q']
+    question = Question.objects.get(id=question_id)
+    question.question_text = q
+    question.save()
+
+    return HttpResponse('수정 완료')
+
+def edit(request, question_id):
+    q = Question.objects.get(id=question_id)
+
+    return render(
+        request, 'polls/edit.html', {'q': q}
+    )
+
 def vote(request, question_id):
-    select = request.POST['select']
+    q = Question.objects.get(id=question_id)
 
-    print(select)
+    try:
+        select = request.POST['select']
 
-    return HttpResponse('ok')
+        c = q.choice_set.get(id=select)
+        c.votes += 1
+        c.save()
+
+        print(select)
+    except:
+        pass
+
+    return render(
+        request,
+        'polls/result.html',
+        {'q': q}
+    )
 
 
 
@@ -24,6 +52,7 @@ def detail(request, question_id):
         'polls/detail.html',
         {
             'question': q.question_text,
+            'num': q.id,
             'choice': c
         }
     )
